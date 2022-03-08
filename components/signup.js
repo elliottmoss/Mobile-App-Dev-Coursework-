@@ -1,0 +1,137 @@
+import React, { Component } from 'react';
+import { Button, StyleSheet, TextInput, View, Image, Text} from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+
+class SignUpScreen extends Component{
+    constructor(props){
+        super(props);
+
+        this.state = {
+            first_name: "",
+            last_name: "",
+            email: "",
+            password: ""
+        }
+    }
+
+    signup = () => {
+        //Validation here...
+
+        return fetch("http://localhost:3333/api/1.0.0/user", {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state)
+        })
+        .then((response) => {
+            if(response.status === 201){
+                return response.json()
+            }else if(response.status === 400){
+                throw 'Failed validation';
+            }else{
+                throw 'Something went wrong';
+            }
+        })
+        .then((responseJson) => {
+               console.log("User created with ID: ", responseJson);
+               this.props.navigation.navigate("Login");
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    }
+
+    render(){
+        return (
+            <ScrollView>
+                <Button title="Login" style={style.Button} onPress={() => this.props.navigation.navigate("Login")}/>
+
+                <TextInput
+                    placeholder="Enter your first name..."
+                    onChangeText={(first_name) => this.setState({first_name})}
+                    value={this.state.first_name}
+                    style={{padding:5, borderWidth:1, margin:5}}
+                />
+                <TextInput
+                    placeholder="Enter your last name..."
+                    onChangeText={(last_name) => this.setState({last_name})}
+                    value={this.state.last_name}
+                    style={{padding:5, borderWidth:1, margin:5}}
+                />
+                <TextInput
+                    placeholder="Enter your email..."
+                    onChangeText={(email) => this.setState({email})}
+                    value={this.state.email}
+                    style={{padding:5, borderWidth:1, margin:5}}
+                />
+                <TextInput
+                    placeholder="Enter your password..."
+                    onChangeText={(password) => this.setState({password})}
+                    value={this.state.password}
+                    secureTextEntry
+                    style={{padding:5, borderWidth:1, margin:5}}
+                />
+                <Button
+                    title="Create an account"
+                    onPress={() => this.signup()}
+                    color="#8B0000"
+                />
+            </ScrollView>
+        )
+    }
+}
+
+const style = StyleSheet.create({
+
+  Container:{
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+  }
+
+  ,image :{
+      marginBottom: 40,
+      margintop: 5,
+      height: 200,
+      width: 200,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 30,
+    }
+
+  ,inputView: {
+  backgroundColor: "#FF7F7F",
+  borderRadius: 30,
+  width: "95%",
+  height: 45,
+  marginBottom: 20,
+  alignItems: "center",
+  textAlign: "center",
+  border: "none",
+  }
+
+  ,TextInput:{
+  borderRadius: 30,
+  border: "none",
+  height: 50,
+  width: "95%",
+  marginBottom: 20,
+  backgroundColor: "#FF7F7F",
+  alignItems: "center",
+  textAlign: "center",
+  }
+
+  ,Button:{
+  width:"95%",
+  borderRadius:25,
+  height:50,
+  alignItems:"center",
+  justifyContent:"center",
+  marginTop:40,
+  backgroundColor:"#8B0000",  
+  }
+});
+
+export default SignUpScreen;
