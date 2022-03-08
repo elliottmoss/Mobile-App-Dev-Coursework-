@@ -82,8 +82,10 @@ class FriendsPage extends Component{
                 if(response.status === 200){
                    // console.log(response);
                     return response.json()
-                }else if(response.status === 400){
-                    throw 'Invalid request';
+                }else if(response.status === 401){
+                    throw 'Need to login';
+                }else if(response.status === 500){
+                    throw 'Server error occured';
                 }else{
                     throw 'Something went wrong';
                 }
@@ -101,25 +103,24 @@ class FriendsPage extends Component{
 
         
         acceptFriend = async (friendToAccept) => {
-            let id = await AsyncStorage.getItem('@session_id');
+            //let id = await AsyncStorage.getItem('@session_id');
             let token = await AsyncStorage.getItem('@session_token');
             //let friends = await AsyncStorage.getItem();
             return fetch("http://localhost:3333/api/1.0.0/friendrequests/" + friendToAccept, {
                 method: 'post',
                 headers: {
-                    'Content-Type': 'application/json',
+                    //'Content-Type': 'application/json',
                     "X-Authorization": token
                 }
             })
             .then((response) => {
                 if(response.status === 200){
-                   // console.log(response);
-                    return response.json()
+                   this.viewFriendRequests()
                 }else if(response.status === 401){
                     throw 'Make sure you log in ';
                 }else if(response.status === 403){
                     throw 'User has already been added';
-                }else if(response.status === 400){
+                }else if(response.status === 404){
                     throw 'Nothing has been found';
                 }else{
                     throw 'Something went wrong';
@@ -140,19 +141,18 @@ class FriendsPage extends Component{
             return fetch("http://localhost:3333/api/1.0.0/friendrequests/" + friendToDecline, {
                 method: 'DELETE',
                 headers: {
-                    'Content-Type': 'application/json',
+                    //'Content-Type': 'application/json',
                     "X-Authorization": token
                 }
             })
             .then((response) => {
                 if(response.status === 200){
-                   // console.log(response);
-                    return response.json()
+                    this.viewFriendRequests()
                 }else if(response.status === 401){
                     throw 'Make sure you log in ';
                 }else if(response.status === 403){
                     throw 'User has already been removed';
-                }else if(response.status === 400){
+                }else if(response.status === 404){
                     throw 'Nothing has been found';
                 }else{
                     throw 'Something went wrong';
@@ -210,8 +210,8 @@ class FriendsPage extends Component{
                       </Text>
                       <View style={style.ButtonContainer}>
                 
-                      <Button title="Accept" text={style.text} onPress={() => this.acceptFriend(item.first_name)} color = "#8B0000" />
-                      <Button title="Decline" text={style.text} onPress={() => this.declineFriend(item.first_name)} color = "#8B0000" />
+                      <Button title="Accept" text={style.text} onPress={() => this.acceptFriend(item.user_id)} color = "#8B0000" />
+                      <Button title="Decline" text={style.text} onPress={() => this.declineFriend(item.user_id)} color = "#8B0000" />
                         </View>  
                     </View>                 
                 )}  

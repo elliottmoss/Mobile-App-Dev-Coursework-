@@ -15,6 +15,7 @@ class MyHomeScreen extends Component {
       location: null,
       error_message: null,
       postID: '',
+      text: '',
       postData:[]
     }
   }
@@ -32,6 +33,12 @@ class MyHomeScreen extends Component {
     this.unsubscribe();
   }
 
+  
+  handlePostInput = (text) => {
+    
+    this.setState({text: text})
+  }
+
   viewPosts = async () => {
     let id = await AsyncStorage.getItem('@session_id');
     let token = await AsyncStorage.getItem('@session_token');
@@ -45,7 +52,7 @@ class MyHomeScreen extends Component {
     })
     .then((response) => {
         if(response.status === 200){
-           // console.log(response);
+            console.log(response);
             return response.json()
         }else if(response.status === 400){
             throw 'Invalid request';
@@ -137,6 +144,36 @@ removeLikePost = async (postID) => {
   })
 }
 
+  uploadPost = async (postText) => {
+
+  let id = await AsyncStorage.getItem('@session_id');
+  let token = await AsyncStorage.getItem('@session_token');
+  //let friends = await AsyncStorage.getItem();
+  return fetch("http://localhost:3333/api/1.0.0/user/" + id +"/post", {
+      method: 'post',
+      headers: {
+          "X-Authorization": token
+      },
+      body: JSON.stringify(postText)
+  })
+  .then((response) => {
+      if(response.status === 200){
+         // console.log(response);
+          return response.json()
+      }else if(response.status === 400){
+          throw 'Invalid request';
+      }else{
+          throw 'Something went wrong';
+      }
+  })
+  .then(async (responseJson) => {
+      console.log('Post Uploaded');
+  })
+  .catch((error) => {
+      console.log(error);
+  })
+}
+
   checkLoggedIn = async () => {
     const value = await AsyncStorage.getItem('@session_token');
     if (value == null) {
@@ -166,7 +203,7 @@ removeLikePost = async (postID) => {
           data={this.state.postData}
                 renderItem={({item}) => (                    
                     <View>
-                      <Text>List of friends posts: 
+                      <Text>List of my posts and friends posts: 
                            Post: {item.text}
                       </Text>
                       <Button title="Like" style={style.Button} onPress={() => this.likePost(item.post_id)} color="#8B0000"/>
@@ -176,6 +213,13 @@ removeLikePost = async (postID) => {
                keyExtractor={(item,index) => item.id}
                //keyExtractor={(item,index) => item.user_id.toString()}               
          />
+                <View>
+                <TextInput style={style.TextInput} placeholder="Enter Text To Post" onTextChange={this.handlePostInput} value={this.state.text} />
+                <Button title="Upload Post" text={style.text} onPress={this.uploadPost(this.state.text) } color = "#8B0000" />
+                </View>
+                 
+
+                
   
          <View style={style.Button}>
          <Button title="Logout" style={style.Button} onPress={() => this.props.navigation.navigate("Logout")} color="#8B0000"/>
@@ -188,6 +232,21 @@ removeLikePost = async (postID) => {
     
   }
 }
+
+           /*   <View>
+                <TextInput style={style.TextInput} placeholder="Enter Text To Post" onChangeText={this.handleSearchInput} value={this.state.text} />
+                <Button title="Upload Post" text={style.text} onPress={ this.uploadPost(this.state.text) } color = "#8B0000" />
+                    <FlatList
+                data={this.state.postData}
+                renderItem={({item}) => (
+                    <View>
+                      <Text>{item.text} </Text>
+                    </View>
+                )}
+                keyExtractor={(item,index) => item.user_id.toString()}
+              />
+
+                </View> */
 
 const style = StyleSheet.create({
 
