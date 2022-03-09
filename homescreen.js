@@ -55,14 +55,19 @@ class MyHomeScreen extends Component {
         if(response.status === 200){
             console.log(response);
             return response.json()
-        }else if(response.status === 400){
-            throw 'Invalid request';
-        }else{
+        }else if(response.status === 401){
+            throw 'Unauthorised';
+        }else if(response.status === 403){
+          throw 'Can only view the posts of yourself or your friends';
+      }else if(response.status === 404){
+        throw 'Not Found';
+    }else if(response.status === 500){
+      throw 'Server Error';
+  }else{
             throw 'Something went wrong';
         }
     })
     .then(async (responseJson) => {
-    //  console.log('hello');
         this.setState({
             isLoading: false,
             postData: responseJson
@@ -73,6 +78,7 @@ class MyHomeScreen extends Component {
     })
 }
 
+//needs work
 likePost = async (postID) => {
   let to_send = {
     postID: parseInt(this.state.id)
@@ -91,10 +97,16 @@ likePost = async (postID) => {
       if(response.status === 200){
          // console.log(response);
           return response.json()
-      }else if(response.status === 400){
-          throw 'Invalid request';
-      }else{
-          throw 'Can only like the post of your friends';
+      }else if(response.status === 401){
+          throw 'Unauthorised';
+      }else if(response.status === 403){
+        throw 'Forbidden - You have already liked this post';
+    }else if(response.status === 404){
+      throw 'Not Found';
+  }else if(response.status === 500){
+    throw 'Server Error';
+}else{
+          throw 'Something went wrong';
       }
   })
   .then(async (responseJson) => {
@@ -109,6 +121,7 @@ likePost = async (postID) => {
   })
 }
 
+//needs work
 removeLikePost = async (postID) => {
   let to_send = {
     postID: parseInt(this.state.id)
@@ -127,11 +140,17 @@ removeLikePost = async (postID) => {
       if(response.status === 200){
          // console.log(response);
           return response.json()
-      }else if(response.status === 400){
-          throw 'Invalid request';
-      }else{
-          throw 'Can only remove a like on a post of users you are friends with';
-      }
+      }else if(response.status === 401){
+        throw 'Unauthorised';
+    }else if(response.status === 403){
+      throw 'Forbidden - No Like to remove';
+  }else if(response.status === 404){
+    throw 'Not Found';
+}else if(response.status === 500){
+  throw 'Server Error';
+}else{
+        throw 'Something went wrong';
+    }
   })
   .then(async (responseJson) => {
     this.setState({

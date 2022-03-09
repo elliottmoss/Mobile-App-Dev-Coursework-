@@ -29,6 +29,8 @@ class SignUpScreen extends Component{
                 return response.json()
             }else if(response.status === 400){
                 throw 'Failed validation';
+            }else if(response.status === 500){
+                throw 'Server Error';
             }else{
                 throw 'Something went wrong';
             }

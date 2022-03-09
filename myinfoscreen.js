@@ -66,13 +66,16 @@ class MyInfoScreen extends Component{
                     'Content-Type': 'application/json',
                     "X-Authorization": token
                 },
-                //body: JSON.stringify(this.state)
             })
             .then((response) => {
                 if(response.status === 200){
                     return response.json()
-                }else if(response.status === 400){
-                    throw 'Invalid email or password';
+                }else if(response.status === 401){
+                    throw 'Unauthorised';
+                }else if(response.status === 404){
+                    throw 'Not Found';
+                }else if(response.status === 500){
+                    throw 'Server Error';
                 }else{
                     throw 'Something went wrong';
                 }
@@ -122,14 +125,20 @@ class MyInfoScreen extends Component{
                     "X-Authorization": token
                 },
                 body: JSON.stringify(to_send)  
-                //body: JSON.stringify(this.state)              
-                
             })
             .then((response) => {
                 if(response.status === 200){
                     console.log('Updated!')
                 }else if(response.status === 400){
-                    throw 'Invalid email or password';
+                    throw 'Bad Request';
+                }else if(response.status === 401){
+                    throw 'Unauthorised';
+                }else if(response.status === 403){
+                    throw 'Forbidden';
+                }else if(response.status === 404){
+                    throw 'Not found';
+                }else if(response.status === 500){
+                    throw 'Server Error';
                 }else{
                     throw 'Something went wrong';
                 }

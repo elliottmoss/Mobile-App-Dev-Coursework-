@@ -50,8 +50,14 @@ class FriendsPage extends Component{
                 if(response.status === 200){
                    // console.log(response);
                     return response.json()
-                }else if(response.status === 400){
-                    throw 'Invalid request';
+                }else if(response.status === 401){
+                    throw 'Unauthorised';
+                }else if(response.status === 403){
+                    throw 'Can only view the friends of yourself or your friends';
+                }else if(response.status === 404){
+                    throw 'Not Found';
+                }else if(response.status === 500){
+                    throw 'Server Error';
                 }else{
                     throw 'Something went wrong';
                 }
@@ -122,11 +128,13 @@ class FriendsPage extends Component{
                 if(response.status === 200){
                    this.viewFriendRequests()
                 }else if(response.status === 401){
-                    throw 'Make sure you log in ';
+                    throw 'Unautherised - Make sure you log in ';
                 }else if(response.status === 403){
                     throw 'User has already been added';
                 }else if(response.status === 404){
-                    throw 'Nothing has been found';
+                    throw 'Not Found';
+                }else if(response.status === 500){
+                    throw 'Server Error';
                 }else{
                     throw 'Something went wrong';
                 }
@@ -159,6 +167,8 @@ class FriendsPage extends Component{
                     throw 'User has already been removed';
                 }else if(response.status === 404){
                     throw 'Nothing has been found';
+                }else if(response.status === 500){
+                    throw 'Server Error';
                 }else{
                     throw 'Something went wrong';
                 }
