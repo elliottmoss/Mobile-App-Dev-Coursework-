@@ -14,7 +14,7 @@ class MyHomeScreen extends Component {
      // listData: [],
       location: null,
       error_message: null,
-      postID: '',
+      user_id: '',
       text: '',
       textToUpload: '',
       postData:[]
@@ -40,6 +40,8 @@ class MyHomeScreen extends Component {
     this.setState({text: text})
   }
 
+
+  //needs work - all posts need to be displayed
   viewPosts = async () => {
     let id = await AsyncStorage.getItem('@session_id');
     let token = await AsyncStorage.getItem('@session_token');
@@ -79,15 +81,15 @@ class MyHomeScreen extends Component {
 }
 
 //needs work
-likePost = async (postID) => {
+likePost = async (user_id) => {
   let to_send = {
-    postID: parseInt(this.state.id)
+    user_id: parseInt(this.state.id)
   };
 
   let id = await AsyncStorage.getItem('@session_id');
   let token = await AsyncStorage.getItem('@session_token');
   //let friends = await AsyncStorage.getItem();
-  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + postID + "/like", {
+  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + user_id + "/like", {
       method: 'post',
       headers: {
           "X-Authorization": token
@@ -122,16 +124,16 @@ likePost = async (postID) => {
 }
 
 //needs work
-removeLikePost = async (postID) => {
+removeLikePost = async (user_id) => {
   let to_send = {
-    postID: parseInt(this.state.id)
+    user_id: parseInt(this.state.id)
   };
 
   let id = await AsyncStorage.getItem('@session_id');
   let token = await AsyncStorage.getItem('@session_token');
   //let friends = await AsyncStorage.getItem();
-  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + postID + "/like", {
-      method: 'delete',
+  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + user_id + "/like", {
+      method: 'DELETE',
       headers: {
           "X-Authorization": token
       }
@@ -163,11 +165,11 @@ removeLikePost = async (postID) => {
       console.log(error);
   })
 }
-  //NEEDS WORK 
-  uploadPost = async (postText) => {
+ 
+  uploadPost = async (text) => {
 
     let to_send = {
-      postText: postText,
+      text: text,
     };
 
   let id = await AsyncStorage.getItem('@session_id');
@@ -203,14 +205,14 @@ removeLikePost = async (postID) => {
 }
 
 
-removePost = async (postID) => {
+removePost = async (user_id) => {
   let to_send = {
-    postID: parseInt(this.state.id)
+    user_id: parseInt(this.state.id)
   };
 
   let token = await AsyncStorage.getItem('@session_token');
   let id = await AsyncStorage.getItem('@session_id');
-  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + postID, {
+  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + user_id, {
       method: 'DELETE',
       headers: {
           //'Content-Type': 'application/json',
