@@ -241,6 +241,53 @@ removePost = async (user_id) => {
       console.log(error);
   })
 }
+
+editPost = async (user_id,text) => {
+ 
+  let to_send = {};
+
+  if (this.state.user_id != this.state.myData.user_id){
+    to_send['user_id'] = this.state.user_id;
+  }
+
+  if (this.state.text != this.state.myData.text){
+    to_send['text'] = this.state.text;
+  }
+
+
+  let token = await AsyncStorage.getItem('@session_token');
+  let id = await AsyncStorage.getItem('@session_id');
+  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + user_id, {
+      method: 'PATCH',
+      headers: {
+          'Content-Type': 'application/json',
+          "X-Authorization": token
+      },
+      body: JSON.stringify(to_send)
+  })
+  .then((response) => {
+      if(response.status === 200){
+          this.viewPosts()
+      }else if(response.status === 401){
+          throw 'Unauthorised';
+      }else if(response.status === 403){
+          throw 'Forbidden - you can only edit your own posts';
+      }else if(response.status === 404){
+          throw 'Nothing has been found';
+      }else if(response.status === 500){
+        throw 'Server Error';
+     }else{
+          throw 'Something went wrong';
+      }
+  })
+  .then(async (responseJson) => {
+      console.log('Post Removed')
+  })
+  .catch((error) => {
+      console.log(error);
+  })
+}
+
   checkLoggedIn = async () => {
     const value = await AsyncStorage.getItem('@session_token');
     if (value == null) {
@@ -279,12 +326,16 @@ removePost = async (user_id) => {
                     </View>                 
                 )}  
                keyExtractor={(item,index) => item.id}
-               //keyExtractor={(item,index) => item.user_id.toString()}               
+               //keyExtractor={(item,index) => item.user_id.toString()} 
+               //  ADD THIS FOR UPLOAD  <Button title="Edit Post" style={style.Button} onPress={() => this.editPost(item.post_id, item.text)} color="#8B0000"/>              
          />
+
+                  
                 <TextInput style={style.TextInput} placeholder="Enter Text To Post" onTextChange= {(text) => this.setState({text})}/>
                
                 <View>
-                <Button title="Upload Post" text={style.text} onPress={() => this.uploadPost(this.state.text)} color = "#8B0000" />
+                <Button title="Upload Post" text={style.Button} onPress={() => this.uploadPost(this.state.text)} color = "#8B0000" />
+               
                 </View>
                  
 
