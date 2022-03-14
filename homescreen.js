@@ -74,6 +74,7 @@ class MyHomeScreen extends Component {
             isLoading: false,
             postData: responseJson
           })
+       //   console.log(responseJson);
     })
     .catch((error) => {
         console.log(error);
@@ -102,7 +103,7 @@ likePost = async (user_id) => {
       }else if(response.status === 401){
           throw 'Unauthorised';
       }else if(response.status === 403){
-        throw 'Forbidden - You have already liked this post';
+        throw 'Forbidden - You may have already liked this post or you may not be friends with this person';
     }else if(response.status === 404){
       throw 'Not Found';
   }else if(response.status === 500){
@@ -145,7 +146,7 @@ removeLikePost = async (user_id) => {
       }else if(response.status === 401){
         throw 'Unauthorised';
     }else if(response.status === 403){
-      throw 'Forbidden - No Like to remove';
+      throw 'Forbidden - No Like to remove or you may not be friends with this person';
   }else if(response.status === 404){
     throw 'Not Found';
 }else if(response.status === 500){
@@ -317,8 +318,9 @@ editPost = async (user_id,text) => {
           data={this.state.postData}
                 renderItem={({item}) => (                    
                     <View>
-                      <Text>List of my posts and friends posts: 
-                           Post: {item.text}
+                      <Text> 
+                           Name: {item.author.first_name + ""} {item.author.last_name}
+                           Posted: {item.text}
                       </Text>
                       <Button title="Like" style={style.Button} onPress={() => this.likePost(item.post_id)} color="#8B0000"/>
                       <Button title="Remove Like" style={style.Button} onPress={() => this.removeLikePost(item.post_id)} color="#8B0000"/>
