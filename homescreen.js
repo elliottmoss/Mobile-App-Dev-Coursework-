@@ -313,11 +313,12 @@ editPost = async (user_id,text) => {
     }else{
       return (
         <View style={style.Container}>
-          
+          <Text style={style.Title}>My Wall</Text>
           <FlatList
           data={this.state.postData}
                 renderItem={({item}) => (                    
                     <View>
+                      
                       <Text> 
                            Name: {item.author.first_name + ""} {item.author.last_name}
                            Posted: {item.text}
@@ -362,8 +363,10 @@ const style = StyleSheet.create({
   Container:{
       flex: 1,
       backgroundColor: '#fff',
-      alignItems: 'flex-start',
-      justifyContent: 'center',
+      alignItems: 'center',
+      //justifyContent: 'center',
+      height:'100%',
+      width:'100%'    
   }
 
   ,image :{
@@ -406,6 +409,19 @@ const style = StyleSheet.create({
   justifyContent:"center",
   marginTop:40,
   backgroundColor:"#8B0000",  
+  },
+
+  Title:{
+    marginTop: 16,
+    paddingVertical: 8,
+    borderWidth: 4,
+    borderColor: "#20232a",
+    borderRadius: 6,
+    backgroundColor: "#8B0000",
+    color: "#20232a",
+    alignContent: "center",
+    fontSize: 30,
+    fontWeight: "bold"
   }
 });
 

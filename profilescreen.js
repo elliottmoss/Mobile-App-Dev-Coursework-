@@ -80,8 +80,12 @@ class Profilescreen extends Component{
             .then((response) => {
                 if(response.status === 200){
                     return response.json()
-                }else if(response.status === 400){
-                    throw 'Invalid email or password';
+                }else if(response.status === 401){
+                    throw 'Unauthorised';
+                }else if(response.status === 404){
+                    throw 'Not Found';
+                }else if(response.status === 500){
+                    throw 'Server Error';
                 }else{
                     throw 'Something went wrong';
                 }
