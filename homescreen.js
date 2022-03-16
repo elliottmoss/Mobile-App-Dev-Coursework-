@@ -34,10 +34,13 @@ class MyHomeScreen extends Component {
     this.unsubscribe();
   }
 
+ 
+ 
   
   handlePostInput = (text) => {
     
     this.setState({text: text})
+    //console.log(this.state.text)
   }
 
 
@@ -82,15 +85,15 @@ class MyHomeScreen extends Component {
 }
 
 //needs work
-likePost = async (user_id) => {
+likePost = async (post_id) => {
   let to_send = {
-    user_id: parseInt(this.state.id)
+    post_id: parseInt(this.state.id)
   };
 
   let id = await AsyncStorage.getItem('@session_id');
   let token = await AsyncStorage.getItem('@session_token');
   //let friends = await AsyncStorage.getItem();
-  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + user_id + "/like", {
+  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + post_id + "/like", {
       method: 'post',
       headers: {
           "X-Authorization": token
@@ -125,15 +128,15 @@ likePost = async (user_id) => {
 }
 
 //needs work
-removeLikePost = async (user_id) => {
+removeLikePost = async (post_id) => {
   let to_send = {
-    user_id: parseInt(this.state.id)
+    post_id: parseInt(this.state.id)
   };
 
   let id = await AsyncStorage.getItem('@session_id');
   let token = await AsyncStorage.getItem('@session_token');
   //let friends = await AsyncStorage.getItem();
-  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + user_id + "/like", {
+  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + post_id + "/like", {
       method: 'DELETE',
       headers: {
           "X-Authorization": token
@@ -167,12 +170,13 @@ removeLikePost = async (user_id) => {
   })
 }
  
-  uploadPost = async (text) => {
-
+  uploadPost = async () => {
+  console.log(this.state.text)
+  //  console.log('hello')
     let to_send = {
-      text: text,
+      text: this.state.text,
     };
-
+    //console.log(to_send)
   let id = await AsyncStorage.getItem('@session_id');
   let token = await AsyncStorage.getItem('@session_token');
   //let friends = await AsyncStorage.getItem();
@@ -182,6 +186,7 @@ removeLikePost = async (user_id) => {
          'Content-Type': 'application/json',
           "X-Authorization": token
       },
+      
       body: JSON.stringify(to_send)
   })
   .then((response) => {
@@ -198,6 +203,7 @@ removeLikePost = async (user_id) => {
       }
   })
   .then(async (responseJson) => {
+      this.viewPosts()
       console.log('Post Uploaded');
   })
   .catch((error) => {
@@ -206,14 +212,14 @@ removeLikePost = async (user_id) => {
 }
 
 
-removePost = async (user_id) => {
+removePost = async (post_id) => {
   let to_send = {
-    user_id: parseInt(this.state.id)
+    post_id: parseInt(this.state.id)
   };
 
   let token = await AsyncStorage.getItem('@session_token');
   let id = await AsyncStorage.getItem('@session_id');
-  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + user_id, {
+  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + post_id, {
       method: 'DELETE',
       headers: {
           //'Content-Type': 'application/json',
@@ -236,6 +242,7 @@ removePost = async (user_id) => {
       }
   })
   .then(async (responseJson) => {
+    this.viewPosts()
       console.log('Post Removed')
   })
   .catch((error) => {
@@ -243,12 +250,12 @@ removePost = async (user_id) => {
   })
 }
 
-editPost = async (user_id,text) => {
+editPost = async (post_id,text) => {
  
   let to_send = {};
 
-  if (this.state.user_id != this.state.myData.user_id){
-    to_send['user_id'] = this.state.user_id;
+  if (this.state.post_id != this.state.myData.post_id){
+    to_send['post_id'] = this.state.post_id;
   }
 
   if (this.state.text != this.state.myData.text){
@@ -258,7 +265,7 @@ editPost = async (user_id,text) => {
 
   let token = await AsyncStorage.getItem('@session_token');
   let id = await AsyncStorage.getItem('@session_id');
-  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + user_id, {
+  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + post_id, {
       method: 'PATCH',
       headers: {
           'Content-Type': 'application/json',
@@ -282,7 +289,8 @@ editPost = async (user_id,text) => {
       }
   })
   .then(async (responseJson) => {
-      console.log('Post Removed')
+    this.viewPosts()
+      console.log('Post Edited')
   })
   .catch((error) => {
       console.log(error);
@@ -313,6 +321,7 @@ editPost = async (user_id,text) => {
     }else{
       return (
         <View style={style.Container}>
+             
           <Text style={style.Title}>My Wall</Text>
           <FlatList
           data={this.state.postData}
@@ -320,33 +329,33 @@ editPost = async (user_id,text) => {
                     <View>
                       
                       <Text> 
-                           Name: {item.author.first_name + ""} {item.author.last_name}
+                           Name: {item.author.first_name + ""} {item.author.last_name + " "}
                            Posted: {item.text}
                       </Text>
                       <Button title="Like" style={style.Button} onPress={() => this.likePost(item.post_id)} color="#8B0000"/>
                       <Button title="Remove Like" style={style.Button} onPress={() => this.removeLikePost(item.post_id)} color="#8B0000"/>
                       <Button title="Delete Post" style={style.Button} onPress={() => this.removePost(item.post_id)} color="#8B0000"/>
+
+                      <TextInput style={style.TextInput} placeholder="Enter Text To Post" onTextChange= {(text) => this.setState({text})}/>              
+                      <Button title="Edit Post" style={style.Button} onPress={() => this.editPost(item.author.user_id, item.text)} color="#8B0000"/>              
+                     
                     </View>                 
                 )}  
                keyExtractor={(item,index) => item.id}
                //keyExtractor={(item,index) => item.user_id.toString()} 
                //  ADD THIS FOR UPLOAD  <Button title="Edit Post" style={style.Button} onPress={() => this.editPost(item.post_id, item.text)} color="#8B0000"/>              
-         />
+                    //<TextInput style={style.TextInput} placeholder="Enter Text To Post" onTextChange= {(text) => this.setState({text})}/>              
+         />      
+        <TextInput style={style.TextInput} placeholder="Enter Text To Post" onTextChange={this.handlePostInput} value={this.state.text}/>
+        
+        <View>
+        <Button title="Upload Post" text={style.Button} onPress={() => this.uploadPost()} color = "#8B0000" /> 
+          </View>          
 
-                  
-                <TextInput style={style.TextInput} placeholder="Enter Text To Post" onTextChange= {(text) => this.setState({text})}/>
-               
-                <View>
-                <Button title="Upload Post" text={style.Button} onPress={() => this.uploadPost(this.state.text)} color = "#8B0000" />
-               
-                </View>
-                 
 
-                
-  
-         <View style={style.Button}>
-         <Button title="Logout" style={style.Button} onPress={() => this.props.navigation.navigate("Logout")} color="#8B0000"/>
-          </View>
+                <View style={style.Button}>
+                <Button title="Logout" style={style.Button} onPress={() => this.props.navigation.navigate("Logout")} color="#8B0000"/>
+                  </View>
          
          
         </View>

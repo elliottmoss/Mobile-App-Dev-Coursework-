@@ -201,21 +201,22 @@ class FriendsPage extends Component{
         else {
             return(
                 <View>
+                    <Text style = {style.Title}>List Of Friends:</Text>
           <FlatList
           data={this.state.friendsData}
                 renderItem={({item}) => (                    
                     <View>
                       <Text>
-                           Friend First Name: {item.user_givenname},  
-                           Friend Second Name: {item.user_familyname}, 
-                           Friend Email: {item.user_email},
+                           First Name: {item.user_givenname},  
+                           Second Name: {item.user_familyname}, 
+                           Email: {item.user_email},
                            <Button title="View Profile" text={style.Button} onPress={() => this.props.navigation.navigate("UserProfile")} color = "#8B0000" />
                       </Text>
                     </View>                 
                 )}  
                 keyExtractor={(item,index) => item.user_id.toString()}         
          />
-
+        <Text style = {style.Title}>List Of Friend Requests:</Text>
         <FlatList
           data={this.state.friendsReqData}
                 renderItem={({item}) => (                    
@@ -253,6 +254,19 @@ const style = StyleSheet.create({
 
         ,image :{
           
+          },
+
+          Title:{
+            marginTop: 16,
+            paddingVertical: 8,
+            borderWidth: 4,
+            borderColor: "#20232a",
+            borderRadius: 6,
+            backgroundColor: "#8B0000",
+            color: "#20232a",
+            alignContent: "center",
+            fontSize: 30,
+            fontWeight: "bold"
           }
 
 

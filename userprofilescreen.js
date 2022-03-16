@@ -37,7 +37,7 @@ class Userprofilescreen extends Component{
             this.unsubscribe = this.props.navigation.addListener('focus', () => {
               this.checkLoggedIn();
             });
-          
+            
             this.getUserInfo();
           }
         
@@ -45,25 +45,6 @@ class Userprofilescreen extends Component{
             this.unsubscribe();
           }
 
-        /*  handleEmailInput = (email) => {
-            //validate if email is in correct format
-            this.setState({email: email})
-        }
-    
-        handlePasswordInput = (pass) => {
-            //validate if password has certain criteria
-            this.setState({password: pass})
-        }
-
-        handleFirstNameInput = (first) => {
-            //any validation for name
-            this.setState({first_name: first})
-        }
-
-        handleSecondNameInput = (last) => {
-            //any validation for name
-            this.setState({last_name: last})
-        }*/
 
         checkLoggedIn = async () => {
             const value = await AsyncStorage.getItem('@session_token');
@@ -72,8 +53,9 @@ class Userprofilescreen extends Component{
             }
           };
 
-           //needs work - all posts need to be displayed - and for the user of profile you are looking at
+           //needs work - needs to change id with user_id of account currently on 
   viewPosts = async () => {
+     // console.log(user_id)
     let id = await AsyncStorage.getItem('@session_id');
     let token = await AsyncStorage.getItem('@session_token');
     //let friends = await AsyncStorage.getItem();
@@ -113,15 +95,15 @@ class Userprofilescreen extends Component{
 }
 
 //needs work and for the user of profile you are looking at
-likePost = async (user_id) => {
+likePost = async (post_id) => {
   let to_send = {
-    user_id: parseInt(this.state.id)
+    post_id: parseInt(this.state.id)
   };
 
   let id = await AsyncStorage.getItem('@session_id');
   let token = await AsyncStorage.getItem('@session_token');
   //let friends = await AsyncStorage.getItem();
-  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + user_id + "/like", {
+  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + post_id + "/like", {
       method: 'post',
       headers: {
           "X-Authorization": token
@@ -156,15 +138,15 @@ likePost = async (user_id) => {
 }
 
 //needs work and for the user of profile you are looking at
-removeLikePost = async (user_id) => {
+removeLikePost = async (post_id) => {
   let to_send = {
-    user_id: parseInt(this.state.id)
+    post_id: parseInt(this.state.id)
   };
 
   let id = await AsyncStorage.getItem('@session_id');
   let token = await AsyncStorage.getItem('@session_token');
   //let friends = await AsyncStorage.getItem();
-  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + user_id + "/like", {
+  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + post_id + "/like", {
       method: 'DELETE',
       headers: {
           "X-Authorization": token
@@ -197,7 +179,7 @@ removeLikePost = async (user_id) => {
       console.log(error);
   })
 }
-// needs work 
+// need to change id to be user_id of user whos page this is 
   uploadPost = async (text) => {
 
     let to_send = {
@@ -236,15 +218,15 @@ removeLikePost = async (user_id) => {
   })
 }
 
-//needs work 
-removePost = async (user_id) => {
+ 
+removePost = async (post_id) => {
   let to_send = {
     user_id: parseInt(this.state.id)
   };
 
   let token = await AsyncStorage.getItem('@session_token');
   let id = await AsyncStorage.getItem('@session_id');
-  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + user_id, {
+  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + post_id, {
       method: 'DELETE',
       headers: {
           //'Content-Type': 'application/json',
@@ -275,12 +257,12 @@ removePost = async (user_id) => {
 }
 
 //needs work - check all post stuff is working correctly for other users profile 
-editPost = async (user_id,text) => {
+editPost = async (post_id,text) => {
  
   let to_send = {};
 
-  if (this.state.user_id != this.state.myData.user_id){
-    to_send['user_id'] = this.state.user_id;
+  if (this.state.post_id != this.state.myData.post_id){
+    to_send['user_id'] = this.state.post_id;
   }
 
   if (this.state.text != this.state.myData.text){
@@ -290,7 +272,7 @@ editPost = async (user_id,text) => {
 
   let token = await AsyncStorage.getItem('@session_token');
   let id = await AsyncStorage.getItem('@session_id');
-  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + user_id, {
+  return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + post_id, {
       method: 'PATCH',
       headers: {
           'Content-Type': 'application/json',
@@ -358,6 +340,8 @@ editPost = async (user_id,text) => {
                         last_name: responseJson.last_name,
                         email: responseJson.email
                       })
+                      //this.viewPosts(responseJson.user_id)
+                      this.viewPosts()
             })
             .catch((error) => {
                 console.log(error);
@@ -369,7 +353,7 @@ editPost = async (user_id,text) => {
 
     render(){
         return(
-            <View style = {style.Container}>
+        <View style = {style.Container}>
             <Image source = {require("../assets/defaultphoto.png")} style={style.ProfileImage} />
             <Text style={style.Title}>User Wall</Text>
             

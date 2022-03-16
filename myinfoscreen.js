@@ -17,6 +17,7 @@ class MyInfoScreen extends Component{
                 myData: {}
             }
 
+            //const { data } = route.params;
            
         }
         static navigationOptions = {
@@ -148,6 +149,8 @@ class MyInfoScreen extends Component{
             })
         }
 
+        
+
         checkLoggedIn = async () => {
             const value = await AsyncStorage.getItem('@session_token');
             if (value == null) {
@@ -185,6 +188,8 @@ class MyInfoScreen extends Component{
                          <View style={style.ButtonContainer}>
                          <Button title="Update my information" text={style.text} color = "#8B0000" onPress={() => this.updateMyInfo()} />   
                          </View>
+
+                         
                         </View>
               
                 </View>

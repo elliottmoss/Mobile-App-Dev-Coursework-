@@ -16,6 +16,7 @@ class Profilescreen extends Component{
                 first_name: "",
                 last_name: "",
                 isLoading: true,
+                //data: route.params,
                 myData: {}
             }
 
@@ -104,6 +105,29 @@ class Profilescreen extends Component{
                 console.log(error);
             })
         }
+
+        updateMyProfPic = async (data) => {
+     
+            let id = await AsyncStorage.getItem('@session_id');
+            let token = await AsyncStorage.getItem('@session_token');
+            let res = await fetch(data.base64);
+            let blob = await res.blob();
+      
+            return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/photo", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "image/png",
+                    "X-Authorization": token
+                },
+                body: blob
+            })
+            .then((response) => {
+                console.log("Picture added", response);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        }
         
         
     
@@ -121,7 +145,10 @@ class Profilescreen extends Component{
                                My Email: {this.state.myData.email}, 
                                My Number of Friends: {this.state.myData.friend_count}    
                           </Text>
-            <Button title="Edit My Profile:" text={style.text} onPress={() => this.props.navigation.navigate("MyInformation")} color="#8B0000"/>          
+            <Button title="Edit My Profile:" text={style.text} onPress={() => this.props.navigation.navigate("MyInformation")} color="#8B0000"/> 
+
+            <Button title="Update my profile photo" text={style.text} color = "#8B0000" onPress={() => this.updateMyProfPic(this.state.data)} />   
+                                 
             </View>  
 
            
