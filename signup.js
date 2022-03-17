@@ -47,8 +47,7 @@ class SignUpScreen extends Component{
     render(){
         return (
             <ScrollView>
-                <Button title="Login" style={style.Button} onPress={() => this.props.navigation.navigate("Login")}/>
-
+               
                 <TextInput
                     placeholder="Enter your first name..."
                     onChangeText={(first_name) => this.setState({first_name})}

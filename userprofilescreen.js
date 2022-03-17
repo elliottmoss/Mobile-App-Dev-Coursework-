@@ -37,7 +37,14 @@ class Userprofilescreen extends Component{
             this.unsubscribe = this.props.navigation.addListener('focus', () => {
               this.checkLoggedIn();
             });
-            
+            let { first_name } = this.props.route.params
+            this.setState({first_name: first_name})
+            let { last_name } = this.props.route.params
+            this.setState({last_name: last_name})
+            let { email } = this.props.route.params
+            this.setState({email: email})
+            let { user_id } = this.props.route.params
+            this.setState({user_id: user_id})
             this.getUserInfo();
           }
         
@@ -54,12 +61,15 @@ class Userprofilescreen extends Component{
           };
 
            //needs work - needs to change id with user_id of account currently on 
-  viewPosts = async () => {
+  viewPosts = async (user_id) => {
      // console.log(user_id)
-    let id = await AsyncStorage.getItem('@session_id');
+    //let id = await AsyncStorage.getItem('@session_id');
     let token = await AsyncStorage.getItem('@session_token');
+    //let user_id = await AsyncStorage.getItem('@user_id');
     //let friends = await AsyncStorage.getItem();
-    return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post", {
+    
+    //console.log(user_id)
+    return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/post", {
         method: 'get',
         headers: {
            // 'Content-Type': 'application/json',
@@ -179,13 +189,15 @@ removeLikePost = async (post_id) => {
       console.log(error);
   })
 }
-// need to change id to be user_id of user whos page this is 
-  uploadPost = async (text) => {
 
+  uploadPost = async () => {
+
+    let text = await AsyncStorage.getItem('@text');
     let to_send = {
       text: text,
     };
 
+ // let user_id = await AsyncStorage.getItem('@user_id');
   let id = await AsyncStorage.getItem('@session_id');
   let token = await AsyncStorage.getItem('@session_token');
   //let friends = await AsyncStorage.getItem();
@@ -305,12 +317,12 @@ editPost = async (post_id,text) => {
 // needs work 
           getUserInfo = async () => {
 
-            let id = await AsyncStorage.getItem('@session_id');
-            //PULL IN USERS ID OF PROFILE IT IS 
+            let user_id = await AsyncStorage.getItem('@user_id');
+            //console.log(user_id)
 
             let token = await AsyncStorage.getItem('@session_token');
     
-            return fetch("http://localhost:3333/api/1.0.0/user/" + id, {
+            return fetch("http://localhost:3333/api/1.0.0/user/" + user_id, {
                 method: 'get',
                 headers: {
                     'Content-Type': 'application/json',
@@ -338,10 +350,11 @@ editPost = async (post_id,text) => {
                         myData: responseJson,
                         first_name: responseJson.first_name,
                         last_name: responseJson.last_name,
-                        email: responseJson.email
+                        email: responseJson.email,
+                        user_id: responseJson.user_id
                       })
                       //this.viewPosts(responseJson.user_id)
-                      this.viewPosts()
+                      this.viewPosts(this.user_id)
             })
             .catch((error) => {
                 console.log(error);
@@ -359,10 +372,9 @@ editPost = async (post_id,text) => {
             
             <View style = {style.ButtonContainer}>
             <Text style={style.myText}>Current Information: 
-                               User First Name: {this.state.myData.first_name},  
-                               User Second Name: {this.state.myData.last_name}, 
-                               User Email: {this.state.myData.email}, 
-                               User Number of Friends: {this.state.myData.friend_count}    
+                               User First Name: {this.state.first_name},  
+                               User Second Name: {this.state.last_name}, 
+                               User Email: {this.state.email},    
                           </Text>
              </View>  
 
@@ -387,10 +399,10 @@ editPost = async (post_id,text) => {
          />
 
                   
-                <TextInput style={style.TextInput} placeholder="Enter Text To Post" onTextChange= {(text) => this.setState({text})}/>
+                <TextInput style={style.TextInput} placeholder="Enter Text To Post" onTextChange= {(text) => this.setState({text})} value={this.state.text}/>
                
                 <View>
-                <Button title="Upload Post" text={style.Button} onPress={() => this.uploadPost(this.state.text)} color = "#8B0000" />
+                <Button title="Upload Post" text={style.Button} onPress={() => this.uploadPost()} color = "#8B0000" />
                
                 </View>
 

@@ -210,7 +210,7 @@ class FriendsPage extends Component{
                            First Name: {item.user_givenname},  
                            Second Name: {item.user_familyname}, 
                            Email: {item.user_email},
-                           <Button title="View Profile" text={style.Button} onPress={() => this.props.navigation.navigate("UserProfile")} color = "#8B0000" />
+                           <Button title="View Profile" text={style.Button} onPress={() => this.props.navigation.navigate("UserProfile",{email:item.user_email,first_name:item.user_givenname,last_name:item.user_familyname, user_id:item.user_id})} color = "#8B0000" />
                       </Text>
                     </View>                 
                 )}  

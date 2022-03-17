@@ -15,7 +15,7 @@ class MyHomeScreen extends Component {
       location: null,
       error_message: null,
       user_id: '',
-      text: '',
+      text: "",
       textToUpload: '',
       postData:[]
     }
@@ -170,45 +170,43 @@ removeLikePost = async (post_id) => {
   })
 }
  
-  uploadPost = async () => {
-  console.log(this.state.text)
-  //  console.log('hello')
-    let to_send = {
-      text: this.state.text,
-    };
-    //console.log(to_send)
-  let id = await AsyncStorage.getItem('@session_id');
-  let token = await AsyncStorage.getItem('@session_token');
-  //let friends = await AsyncStorage.getItem();
-  return fetch("http://localhost:3333/api/1.0.0/user/" + id +"/post", {
-      method: 'post',
-      headers: {
-         'Content-Type': 'application/json',
-          "X-Authorization": token
-      },
-      
-      body: JSON.stringify(to_send)
-  })
-  .then((response) => {
-      if(response.status === 201){
-          return response.json()
-      }else if(response.status === 401){
-          throw 'Unauthorised';
-      }else if(response.status === 404){
-        throw 'Not found';
-      }else if(response.status === 500){
-        throw 'Server Error';
-       }else{
-          throw 'Something went wrong';
-      }
-  })
-  .then(async (responseJson) => {
-      this.viewPosts()
-      console.log('Post Uploaded');
-  })
-  .catch((error) => {
-      console.log(error);
-  })
+uploadPost = async (text) => {
+
+  let to_send = {
+    text: text,
+  };
+
+let id = await AsyncStorage.getItem('@session_id');
+let token = await AsyncStorage.getItem('@session_token');
+//let friends = await AsyncStorage.getItem();
+return fetch("http://localhost:3333/api/1.0.0/user/" + id +"/post", {
+    method: 'post',
+    headers: {
+       'Content-Type': 'application/json',
+        "X-Authorization": token
+    },
+    body: JSON.stringify(to_send)
+})
+.then((response) => {
+    if(response.status === 201){
+        return response.json()
+    }else if(response.status === 401){
+        throw 'Unauthorised';
+    }else if(response.status === 404){
+      throw 'Not found';
+    }else if(response.status === 500){
+      throw 'Server Error';
+     }else{
+        throw 'Something went wrong';
+    }
+})
+.then(async (responseJson) => {
+    console.log('Post Uploaded');
+    this.viewPosts()
+})
+.catch((error) => {
+    console.log(error);
+})
 }
 
 
@@ -324,6 +322,7 @@ editPost = async (post_id,text) => {
              
           <Text style={style.Title}>My Wall</Text>
           <FlatList
+          style = {style.list}
           data={this.state.postData}
                 renderItem={({item}) => (                    
                     <View>
@@ -342,20 +341,22 @@ editPost = async (post_id,text) => {
                     </View>                 
                 )}  
                keyExtractor={(item,index) => item.id}
-               //keyExtractor={(item,index) => item.user_id.toString()} 
+              
                //  ADD THIS FOR UPLOAD  <Button title="Edit Post" style={style.Button} onPress={() => this.editPost(item.post_id, item.text)} color="#8B0000"/>              
                     //<TextInput style={style.TextInput} placeholder="Enter Text To Post" onTextChange= {(text) => this.setState({text})}/>              
-         />      
-        <TextInput style={style.TextInput} placeholder="Enter Text To Post" onTextChange={this.handlePostInput} value={this.state.text}/>
-        
-        <View>
-        <Button title="Upload Post" text={style.Button} onPress={() => this.uploadPost()} color = "#8B0000" /> 
-          </View>          
+         /> 
+
+                <TextInput style={style.TextInput} placeholder="Enter Text To Post" onTextChange= {(text) => this.setState({text})} />
+               
+               <View>
+               <Button title="Upload Post" text={style.Button} onPress={() => this.uploadPost(this.state.text)} color = "#8B0000" />
+              
+               </View>         
 
 
-                <View style={style.Button}>
-                <Button title="Logout" style={style.Button} onPress={() => this.props.navigation.navigate("Logout")} color="#8B0000"/>
-                  </View>
+          <View style={style.Button}>
+          <Button title="Logout" style={style.Button} onPress={() => this.props.navigation.navigate("Logout")} color="#8B0000"/>
+          </View>
          
          
         </View>
@@ -431,6 +432,10 @@ const style = StyleSheet.create({
     alignContent: "center",
     fontSize: 30,
     fontWeight: "bold"
+  },
+
+  list:{
+    marginBottom: 15
   }
 });
 

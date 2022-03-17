@@ -16,7 +16,7 @@ class Profilescreen extends Component{
                 first_name: "",
                 last_name: "",
                 isLoading: true,
-                //data: route.params,
+                data:'',
                 myData: {}
             }
 
@@ -30,7 +30,9 @@ class Profilescreen extends Component{
             this.unsubscribe = this.props.navigation.addListener('focus', () => {
               this.checkLoggedIn();
             });
-          
+
+            let { data } = this.props.route.params
+            this.setState({data: data})
             this.getMyInfo();
           }
         
@@ -135,7 +137,7 @@ class Profilescreen extends Component{
     render(){
         return(
             <View style = {style.Container}>
-            <Image source = {require("../assets/defaultphoto.png")} style={style.ProfileImage} />
+            <Image source = {require(this.state.data)} style={style.ProfileImage} />
 
             
             <View style = {style.ButtonContainer}>
