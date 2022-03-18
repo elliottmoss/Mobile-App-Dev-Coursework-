@@ -46,6 +46,7 @@ class Userprofilescreen extends Component{
             let { user_id } = this.props.route.params
             this.setState({user_id: user_id})
             this.getUserInfo();
+           // this.viewPosts();
           }
         
           componentWillUnmount() {
@@ -61,13 +62,13 @@ class Userprofilescreen extends Component{
           };
 
            //needs work - needs to change id with user_id of account currently on 
-  viewPosts = async (user_id) => {
+  viewPosts = async () => {
      // console.log(user_id)
     //let id = await AsyncStorage.getItem('@session_id');
     let token = await AsyncStorage.getItem('@session_token');
-    //let user_id = await AsyncStorage.getItem('@user_id');
+    let user_id = await AsyncStorage.getItem('@user_id');
     //let friends = await AsyncStorage.getItem();
-    
+
     //console.log(user_id)
     return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/post", {
         method: 'get',
@@ -354,7 +355,7 @@ editPost = async (post_id,text) => {
                         user_id: responseJson.user_id
                       })
                       //this.viewPosts(responseJson.user_id)
-                      this.viewPosts(this.user_id)
+                      this.viewPosts()
             })
             .catch((error) => {
                 console.log(error);

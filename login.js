@@ -69,7 +69,7 @@ class LoginScreen extends Component{
     render(){
         return(
             <View style = {style.Container}>
-                <Image source = {require("../assets/loginlogo.jpg")} style={style.image} />
+                <Image source = {require("../assets/star.png")} style={style.image} />
 
                 <TextInput style={style.TextInput} placeholder="Enter Email:" onChangeText={this.handleEmailInput} value={this.state.email} />
                 <TextInput style={style.TextInput} placeholder="Enter Password:" onChangeText={this.handlePasswordInput} value={this.state.password} secureTextEntry={true} />

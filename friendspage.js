@@ -206,7 +206,7 @@ class FriendsPage extends Component{
           data={this.state.friendsData}
                 renderItem={({item}) => (                    
                     <View>
-                      <Text>
+                      <Text style={style.textDisplay}>
                            First Name: {item.user_givenname},  
                            Second Name: {item.user_familyname}, 
                            Email: {item.user_email},
@@ -221,7 +221,7 @@ class FriendsPage extends Component{
           data={this.state.friendsReqData}
                 renderItem={({item}) => (                    
                     <View>
-                      <Text>Friend Requests:
+                      <Text style={style.textDisplay}>Friend Requests:
                            First Name: {item.first_name},  
                            Second Name: {item.last_name},  
                       </Text>
@@ -234,7 +234,7 @@ class FriendsPage extends Component{
                 )}  
                 keyExtractor={(item,index) => item.user_id.toString()}         
          />
-
+       
 
         </View>
                 );
@@ -253,7 +253,14 @@ const style = StyleSheet.create({
         }
 
         ,image :{
-          
+            //flex: 2,
+            //marginBottom: 40,
+            margintop: 5,
+            height: 200,
+            width: 200,
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 30,
           },
 
           Title:{
@@ -267,6 +274,14 @@ const style = StyleSheet.create({
             alignContent: "center",
             fontSize: 30,
             fontWeight: "bold"
+          },
+
+          textDisplay:{
+            fontSize: 14,
+            lineHeight: 21,
+            fontWeight: 'bold',
+            letterSpacing: 0.25,
+            color: 'black',
           }
 
 

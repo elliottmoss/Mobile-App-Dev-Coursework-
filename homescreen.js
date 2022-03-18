@@ -327,13 +327,14 @@ editPost = async (post_id,text) => {
                 renderItem={({item}) => (                    
                     <View>
                       
-                      <Text> 
+                      <Text style={style.subTitle}> 
                            Name: {item.author.first_name + ""} {item.author.last_name + " "}
                            Posted: {item.text}
                       </Text>
                       <Button title="Like" style={style.Button} onPress={() => this.likePost(item.post_id)} color="#8B0000"/>
                       <Button title="Remove Like" style={style.Button} onPress={() => this.removeLikePost(item.post_id)} color="#8B0000"/>
                       <Button title="Delete Post" style={style.Button} onPress={() => this.removePost(item.post_id)} color="#8B0000"/>
+                      <Button title="View Post" style={style.Button} onPress={() => this.props.navigation.navigate("SinglePostScreen",{user_id:item.author.user_id,post_id:item.post_id})} color="#8B0000"/>
 
                       <TextInput style={style.TextInput} placeholder="Enter Text To Post" onTextChange= {(text) => this.setState({text})}/>              
                       <Button title="Edit Post" style={style.Button} onPress={() => this.editPost(item.author.user_id, item.text)} color="#8B0000"/>              
@@ -373,10 +374,12 @@ const style = StyleSheet.create({
   Container:{
       flex: 1,
       backgroundColor: '#fff',
-      alignItems: 'center',
+      marginLeft:15,
+      marginRight:15
+      //alignItems: 'center',
       //justifyContent: 'center',
-      height:'100%',
-      width:'100%'    
+     // height:'100%',
+     // width:'100%'  
   }
 
   ,image :{
@@ -436,6 +439,15 @@ const style = StyleSheet.create({
 
   list:{
     marginBottom: 15
+  },
+
+  subTitle:{
+    marginBottom: 5,
+    marginTop: 5,
+    textAlign: 'center',
+      color: 'black',
+      fontWeight: 'bold',
+      fontSize: 15
   }
 });
 

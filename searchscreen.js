@@ -136,7 +136,7 @@ class SearchScreen extends Component{
                 data={this.state.listData}
                 renderItem={({item}) => (
                     <View>
-                      <Text>{item.user_givenname} {item.user_familyname}</Text>
+                      <Text style={style.textDisplay}>{item.user_givenname} {item.user_familyname}</Text>
                       <Button title="Add Friend" text={style.text} onPress={() => this.addFriend(item.user_id)} color = "#8B0000" />
                
                     </View>
@@ -162,6 +162,14 @@ const style = StyleSheet.create({
 
         ,image :{
           
+          },
+
+          textDisplay:{
+            fontSize: 14,
+            lineHeight: 21,
+            fontWeight: 'bold',
+            letterSpacing: 0.25,
+            color: 'black',
           }
 
 
